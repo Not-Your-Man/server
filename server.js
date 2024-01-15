@@ -9,16 +9,20 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 
 // Load environment variables from a .env file (optional)
-//require('dotenv').config();//
+// require('dotenv').config();
 
-// Retrieve MongoDB username and password from environment variables
+// Retrieve MongoDB password from environment variables
 const mongoPassword = process.env.MONGO_PASSWORD;
 
-// Construct the MongoDB connection string
-const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/?retryWrites=true&w=majority`;
+// Specify the name of the MongoDB database
+const dbName = "your_database_name"; // Replace with your actual database name
 
+// Construct the MongoDB connection string
+const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 mongoose.connect(mongoURI, {
+  useNewUrlParser: true, // Note: useNewUrlParser is no longer deprecated, so it's safe to include
+  useUnifiedTopology: true,
   connectTimeoutMS: 30000,
 });
 
