@@ -20,8 +20,6 @@ const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.wmuc9
 
 
 mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   connectTimeoutMS: 30000,
 });
 
