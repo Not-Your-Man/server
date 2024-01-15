@@ -12,11 +12,10 @@ app.use(cors());
 //require('dotenv').config();//
 
 // Retrieve MongoDB username and password from environment variables
-const mongoUsername = process.env.MONGO_USERNAME;
 const mongoPassword = process.env.MONGO_PASSWORD;
 
 // Construct the MongoDB connection string
-const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.wmuc96c.mongodb.net/?retryWrites=true&w=majority`;
+const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/?retryWrites=true&w=majority`;
 
 
 mongoose.connect(mongoURI, {
