@@ -22,6 +22,7 @@ const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmu
 
 mongoose.connect(mongoURI, {
   connectTimeoutMS: 30000,
+  ssl: true,
 });
 
 const userSchema = new mongoose.Schema({
