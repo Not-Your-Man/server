@@ -15,7 +15,7 @@ app.use(cors());
 const mongoPassword = process.env.MONGO_PASSWORD;
 
 // Specify the name of the MongoDB database
-const dbName = "your_database_name"; // Replace with your actual database name
+const dbName = "sign_up"; // Replace with your actual database name
 
 // Construct the MongoDB connection string
 const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/${dbName}?retryWrites=true&w=majority`;
