@@ -21,8 +21,6 @@ const dbName = "your_database_name"; // Replace with your actual database name
 const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 mongoose.connect(mongoURI, {
-  useNewUrlParser: true, // Note: useNewUrlParser is no longer deprecated, so it's safe to include
-  useUnifiedTopology: true,
   connectTimeoutMS: 30000,
 });
 
