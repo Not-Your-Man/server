@@ -9,20 +9,19 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 
 // Load environment variables from a .env file (optional)
-// require('dotenv').config();
+//require('dotenv').config();//
 
-// Retrieve MongoDB password from environment variables
-const mongoPassword = process.env.MONGO_PASSWORD;
-
-// Specify the name of the MongoDB database
-const dbName = "sign_up"; // Replace with your actual database name
+// Retrieve MongoDB username and password from environment variables
+//const mongoUsername = process.env.MONGO_USERNAME;
+//const mongoPassword = process.env.MONGO_PASSWORD;
 
 // Construct the MongoDB connection string
-const mongoURI = `mongodb+srv://williamsmicheal237:${mongoPassword}@cluster0.wmuc96c.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+//const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.wmuc96c.mongodb.net/sign_up?retryWrites=true&w=majority`;
+const mongoURI = 'mongodb://127.0.0.1:27017/space';
+
 
 mongoose.connect(mongoURI, {
-  connectTimeoutMS: 30000,
-  ssl: true,
+   connectTimeoutMS: 30000,
 });
 
 const userSchema = new mongoose.Schema({
