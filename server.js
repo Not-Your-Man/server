@@ -10,18 +10,12 @@ app.use(cors());
 
 // Load environment variables from a .env file (optional)
 //require('dotenv').config();//
-
-// Retrieve MongoDB username and password from environment variables
-//const mongoUsername = process.env.MONGO_USERNAME;
-//const mongoPassword = process.env.MONGO_PASSWORD;
-
-// Construct the MongoDB connection string
-//const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.wmuc96c.mongodb.net/sign_up?retryWrites=true&w=majority`;
-const mongoURI = 'mongodb://127.0.0.1:27017/space';
+// Construct the MongoDB connection string for localhost
+const mongoURI = 'mongodb+srv://williamsmicheal237:%40Wrongman%21@cluster0.wmuc96c.mongodb.net/signup_db?retryWrites=true&w=majority';
 
 
 mongoose.connect(mongoURI, {
-   connectTimeoutMS: 30000,
+  connectTimeoutMS: 30000,
 });
 
 const userSchema = new mongoose.Schema({
