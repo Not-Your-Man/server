@@ -54,6 +54,34 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
+// User change password route
+app.patch('/api/change-password/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { oldPassword, newPassword } = req.body;
+
+    // Find the user by ID and check if the old password matches
+    const user = await User.findOne({ _id: userId, password: oldPassword });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Update the user's password
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+// User sign out route
+app.post('/api/sign-out', (req, res) => {
+  // In a real-world scenario, you might handle session or token expiration
+  res.status(200).json({ message: 'Sign out successful' });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
