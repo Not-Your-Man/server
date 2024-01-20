@@ -32,6 +32,12 @@ app.use(bodyParser.json());
 app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email is already registered' });
+    }
     const user = new User({ name, email, phone, password });
     await user.save();
     res.status(201).json({ message: 'User registered successfully' });
