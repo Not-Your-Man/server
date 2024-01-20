@@ -21,6 +21,7 @@ mongoose.connect(mongoURI, {
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
+  phone: String,
   password: String,
 });
 
@@ -28,10 +29,10 @@ const User = mongoose.model('User', userSchema);
 
 app.use(bodyParser.json());
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
+    const { name, email, phone, password } = req.body;
+    const user = new User({ name, email, phone, password });
     await user.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
