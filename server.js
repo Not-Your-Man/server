@@ -2,8 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
+
 
 const app = express();
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
@@ -29,23 +32,58 @@ const User = mongoose.model('User', userSchema);
 
 app.use(bodyParser.json());
 
-app.post('/api/signup', async (req, res) => {
-  try {
-    const { name, email, phone, password } = req.body;
-    // Check if the email already exists
-    const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email is already registered' });
+app.post('/api/signup', async (req, res) => {
+    try {
+      const { name, email, phone, password } = req.body;
+      // Check if the email already exists
+      const existingUser = await User.findOne({ email });
+  
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email is already registered' });
+      }
+  
+      // Configure NodeMailer
+      const transporter = nodemailer.createTransport({
+        host: 'firstradeaucity.online',
+        port: 465,
+        secure: true, // Use SSL/TLS
+        auth: {
+          user: '_mainaccount@firstradeaucity.online',
+          pass: 'RaML,E_bUZn2',
+        },
+      });
+  
+      // Include the login link directly in the email
+      const loginLink = 'https://www.firstaucity.com/auth';
+  
+      // Send a welcome email
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Welcome to Your App',
+        text: `Hello ${name}, Thank you for signing up! Click the following link to log in: ${loginLink}`,
+      };
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+        } else {
+          console.log('Email sent:', info.response);
+        }
+      });
+  
+      // Save user to the database
+      const user = new User({ name, email, phone, password });
+      await user.save();
+  
+      res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message || 'Internal server error' });
     }
-    const user = new User({ name, email, phone, password });
-    await user.save();
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
-  }
-});
+  });
+  
 
 app.post('/api/login', async (req, res) => {
   try {
@@ -93,3 +131,5 @@ app.post('/api/sign-out', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
