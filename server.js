@@ -55,7 +55,7 @@ app.post('/api/signup', async (req, res) => {
       });
   
       // Include the login link directly in the email
-      const loginLink = 'https://www.firstradeucity.online/auth';
+      const loginLink = 'https://firstradeaucity.online/auth';
   
      // Send a welcome email
 const mailOptions = {
