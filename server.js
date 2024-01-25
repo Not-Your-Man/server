@@ -59,7 +59,7 @@ app.post('/api/signup', async (req, res) => {
   
       // Send a welcome email
       const mailOptions = {
-        from: support@firstradeaucity.online,
+        from: 'support@firstradeaucity.online',
           //process.env.EMAIL_USER,
         to: email,
         subject: 'Welcome to Your App',
