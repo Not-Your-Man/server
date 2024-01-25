@@ -62,7 +62,7 @@ const mailOptions = {
   from: 'support@firstradeaucity.online',
   to: email,
   subject: 'Registration Successful',
-  html: `Hello ${name}, Thank you for signing up! Click <a href="${loginLink}">here</a> to log in`,
+  html: `Hello ${name}, Thank you for signing up! Click <a href="${loginLink}">here</a> and navigate to the log in tab`,
 };
 
       transporter.sendMail(mailOptions, (error, info) => {
