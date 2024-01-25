@@ -49,8 +49,8 @@ app.post('/api/signup', async (req, res) => {
         port: 465,
         secure: true, // Use SSL/TLS
         auth: {
-          user: '_mainaccount@firstradeaucity.online',
-          pass: 'RaML,E_bUZn2',
+          user: 'support@firstradeaucity.online',
+          pass: 'Z,EaT_}uLb7r',
         },
       });
   
@@ -59,7 +59,8 @@ app.post('/api/signup', async (req, res) => {
   
       // Send a welcome email
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: support@firstradeaucity.online,
+          //process.env.EMAIL_USER,
         to: email,
         subject: 'Welcome to Your App',
         text: `Hello ${name}, Thank you for signing up! Click the following link to log in: ${loginLink}`,
