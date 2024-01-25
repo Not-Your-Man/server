@@ -57,15 +57,14 @@ app.post('/api/signup', async (req, res) => {
       // Include the login link directly in the email
       const loginLink = 'https://www.firstaucity.com/auth';
   
-      // Send a welcome email
-      const mailOptions = {
-        from: 'support@firstradeaucity.online',
-          //process.env.EMAIL_USER,
-        to: email,
-        subject: 'Welcome to Your App',
-        text: `Hello ${name}, Thank you for signing up! Click the following link to log in: ${loginLink}`,
-      };
-  
+     // Send a welcome email
+const mailOptions = {
+  from: 'support@firstradeaucity.online',
+  to: email,
+  subject: 'Registration Successful',
+  html: `Hello ${name}, Thank you for signing up! Click <a href="${loginLink}">here</a> to log in`,
+};
+
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error('Error sending email:', error);
