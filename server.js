@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
-
 
 const app = express();
 app.use(bodyParser.json());
@@ -89,25 +87,15 @@ const mailOptions = {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    
-    if (user && bcrypt.compareSync(password, user.password)) {
-      // Passwords match
+    const user = await User.findOne({ email, password });
+    if (user) {
       res.status(200).json({ message: 'Login successful' });
     } else {
-      const userExists = !!user; // Check if user with the provided email exists
-
-      if (userExists) {
-        // Valid user, but password is incorrect
-        res.status(401).json({ error: 'Incorrect password' });
-      } else {
-        // User not found
-        res.status(401).json({ error: 'User not found' });
-      }
+      res.status(401).json({ error: 'Invalid credentials' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
 
