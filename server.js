@@ -88,17 +88,28 @@ const mailOptions = {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password });
-    if (user) {
+    const user = await User.findOne({ email });
+    
+    if (user && bcrypt.compareSync(password, user.password)) {
+      // Passwords match
       res.status(200).json({ message: 'Login successful' });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      const userExists = !!user; // Check if user with the provided email exists
+
+      if (userExists) {
+        // Valid user, but password is incorrect
+        res.status(401).json({ error: 'Incorrect password' });
+      } else {
+        // User not found
+        res.status(401).json({ error: 'User not found' });
+      }
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 // User change password route
 app.patch('/api/change-password/:userId', async (req, res) => {
   try {
