@@ -107,13 +107,12 @@ app.post('/api/login', async (req, res) => {
 });
 
 // User change password route
-app.patch('/api/change-password/:email', async (req, res) => {
+app.patch('/api/change-password', async (req, res) => {
   try {
-    const userEmail = req.params.email;
-    const { oldPassword, newPassword } = req.body;
+    const { email, oldPassword, newPassword } = req.body;
 
     // Find the user by email and check if the old password matches
-    const user = await User.findOne({ email: userEmail, password: oldPassword });
+    const user = await User.findOne({ email, password: oldPassword });
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
