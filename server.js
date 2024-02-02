@@ -130,6 +130,7 @@ app.patch('/api/change-password/:email', async (req, res) => {
   }
 });
 
+
 // User sign out route
 app.post('/api/sign-out', (req, res) => {
   // In a real-world scenario, you might handle session or token expiration
