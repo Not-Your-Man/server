@@ -88,8 +88,15 @@ app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email, password });
+
     if (user) {
-      res.status(200).json({ message: 'Login successful' });
+      const userDetails = {
+        name: user.name,
+        email: user.email,
+      };
+
+      // Dispatch action to update Redux state with user details
+      res.status(200).json({ message: 'Login successful', userDetails });
     } else {
       res.status(401).json({ error: 'Invalid credentials' });
     }
