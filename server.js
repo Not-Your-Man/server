@@ -90,7 +90,7 @@ const mailOptions = {
             margin-bottom: 20px;
           }
   
-          .logo img {
+          .logo image {
             max-width: 200px;
           }
   
