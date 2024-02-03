@@ -91,7 +91,7 @@ const mailOptions = {
           }
   
           .logo img {
-            max-width: 200px;
+            max-width: 40px;
           }
   
           h1 {
