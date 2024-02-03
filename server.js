@@ -90,7 +90,7 @@ const mailOptions = {
             margin-bottom: 20px;
           }
   
-          .logo image {
+          .logo img {
             max-width: 200px;
           }
   
@@ -113,7 +113,7 @@ const mailOptions = {
       <body>
         <div class="container">
           <div class="logo">
-            <img src="image/logo.jpg" alt="Logo">
+            <img src="img/logo.jpg" alt="Logo">
           </div>
           <h1>Email Confirmation</h1>
           <div class="confirmation-icon">&#10004;</div>
