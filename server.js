@@ -113,7 +113,7 @@ const mailOptions = {
       <body>
         <div class="container">
           <div class="logo">
-            <img src="server/image/logo.png" alt="Logo">
+            <img src="server/image/logo.jpg" alt="Logo">
           </div>
           <h1>Email Confirmation</h1>
           <div class="confirmation-icon">&#10004;</div>
