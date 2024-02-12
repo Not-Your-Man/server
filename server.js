@@ -207,22 +207,24 @@ app.post('/api/deposit', (req, res) => {
     const { amount } = req.body;
 
     // Check if the amount is valid
-    if (typeof amount !== 'number' || amount <= 0) {
-      return res.status(400).json({ error: 'Invalid amount' });
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Amount must be a positive number' });
     }
 
-    // Process the deposit (replace this with your actual logic)
-    // For example, you might update a user's balance in a database
-    // const userId = req.user.id;
-    // const updatedBalance = updateUserBalance(userId, amount);
+    // Save the deposit amount to the database (replace this with your actual logic)
+    // For example, you might have a function like saveDepositToDatabase(amount)
 
-    // Return a success response with the updated balance
-    return res.status(200).json({ message: 'Deposit successful', amount });
+    // Assuming the saveDepositToDatabase function returns the updated transaction history
+    const transactionHistory = saveDepositToDatabase(amount);
+
+    // Return a success response with the updated transaction history
+    return res.status(200).json({ message: 'Deposit successful', transaction: transactionHistory });
   } catch (error) {
     console.error('Error processing deposit:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 //Start the server
 app.listen(PORT, () => {
