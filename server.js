@@ -200,6 +200,40 @@ app.post('/api/sign-out', (req, res) => {
   res.status(200).json({ message: 'Sign out successful' });
 });
 
+// Route for deposit transactions
+app.post('/api/deposit', async (req, res) => {
+  try {
+    const { userId, amount } = req.body;
+
+    // Update user's balance (assuming you have this logic implemented)
+
+    // Create a new deposit transaction record
+    const transaction = new Transaction({
+      userId,
+      amount,
+      type: 'deposit',
+    });
+    await transaction.save();
+
+    res.status(201).json({ message: 'Deposit successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+// Route for retrieving transaction history
+app.get('/api/transaction-history/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const transactions = await Transaction.find({ userId });
+
+    res.status(200).json({ transactions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
