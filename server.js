@@ -212,6 +212,10 @@ app.use(bodyParser.json());
 // Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
   try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
     const { amount } = req.body;
 
     // Check if the amount is valid
