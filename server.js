@@ -200,40 +200,31 @@ app.post('/api/sign-out', (req, res) => {
   res.status(200).json({ message: 'Sign out successful' });
 });
 
-// Route for deposit transactions
-app.post('/api/deposit', async (req, res) => {
+// Deposit endpoint
+app.post('/api/deposit', (req, res) => {
   try {
-    const { userId, amount } = req.body;
+    // Assuming the deposit amount is sent in the request body
+    const { amount } = req.body;
 
-    // Update user's balance (assuming you have this logic implemented)
+    // Check if the amount is valid
+    if (typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
 
-    // Create a new deposit transaction record
-    const transaction = new Transaction({
-      userId,
-      amount,
-      type: 'deposit',
-    });
-    await transaction.save();
+    // Process the deposit (replace this with your actual logic)
+    // For example, you might update a user's balance in a database
+    // const userId = req.user.id;
+    // const updatedBalance = updateUserBalance(userId, amount);
 
-    res.status(201).json({ message: 'Deposit successful' });
+    // Return a success response with the updated balance
+    return res.status(200).json({ message: 'Deposit successful', amount });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
+    console.error('Error processing deposit:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Route for retrieving transaction history
-app.get('/api/transaction-history/:userId', async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const transactions = await Transaction.find({ userId });
-
-    res.status(200).json({ transactions });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
-  }
-});
+//Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
