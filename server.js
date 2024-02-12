@@ -200,22 +200,16 @@ app.post('/api/sign-out', (req, res) => {
   res.status(200).json({ message: 'Sign out successful' });
 });
 
-// Function to save deposit amount to the database
-const saveDepositToDatabase = async (amount) => {
-  try {
-    // Replace this with your actual database interaction code
-    const transactionHistory = await database.saveDeposit(amount);
+// Define the Deposit model
+const Deposit = mongoose.model('Deposit', {
+  amount: Number,
+  timestamp: { type: Date, default: Date.now },
+});
 
-    // Return the updated transaction history
-    return transactionHistory;
-  } catch (error) {
-    // Handle any database-related errors
-    console.error('Error saving deposit to the database:', error);
-    throw new Error('Internal server error'); // You may want to customize this error message
-  }
-};
+// Middleware for parsing JSON bodies
+app.use(bodyParser.json());
 
-// Your existing deposit endpoint code
+// Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
   try {
     const { amount } = req.body;
@@ -225,8 +219,12 @@ app.post('/api/deposit', async (req, res) => {
       return res.status(400).json({ error: 'Amount must be a positive number' });
     }
 
-    // Save the deposit amount to the database
-    const transactionHistory = await saveDepositToDatabase(amount);
+    // Create a new deposit record
+    const deposit = new Deposit({ amount });
+    await deposit.save();
+
+    // Retrieve the latest transaction history
+    const transactionHistory = await Deposit.find().sort({ timestamp: -1 });
 
     // Return a success response with the updated transaction history
     return res.status(200).json({ message: 'Deposit successful', transaction: transactionHistory });
