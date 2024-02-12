@@ -200,10 +200,24 @@ app.post('/api/sign-out', (req, res) => {
   res.status(200).json({ message: 'Sign out successful' });
 });
 
-// Deposit endpoint
-app.post('/api/deposit', (req, res) => {
+// Function to save deposit amount to the database
+const saveDepositToDatabase = async (amount) => {
   try {
-    // Assuming the deposit amount is sent in the request body
+    // Replace this with your actual database interaction code
+    const transactionHistory = await database.saveDeposit(amount);
+
+    // Return the updated transaction history
+    return transactionHistory;
+  } catch (error) {
+    // Handle any database-related errors
+    console.error('Error saving deposit to the database:', error);
+    throw new Error('Internal server error'); // You may want to customize this error message
+  }
+};
+
+// Your existing deposit endpoint code
+app.post('/api/deposit', async (req, res) => {
+  try {
     const { amount } = req.body;
 
     // Check if the amount is valid
@@ -211,11 +225,8 @@ app.post('/api/deposit', (req, res) => {
       return res.status(400).json({ error: 'Amount must be a positive number' });
     }
 
-    // Save the deposit amount to the database (replace this with your actual logic)
-    // For example, you might have a function like saveDepositToDatabase(amount)
-
-    // Assuming the saveDepositToDatabase function returns the updated transaction history
-    const transactionHistory = saveDepositToDatabase(amount);
+    // Save the deposit amount to the database
+    const transactionHistory = await saveDepositToDatabase(amount);
 
     // Return a success response with the updated transaction history
     return res.status(200).json({ message: 'Deposit successful', transaction: transactionHistory });
@@ -224,7 +235,6 @@ app.post('/api/deposit', (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 //Start the server
 app.listen(PORT, () => {
