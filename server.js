@@ -212,10 +212,18 @@ app.use(bodyParser.json());
 // Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
   try {
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'POST');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.status(200).end();
+      return;
+    }
+
+    // Handle actual POST request
     res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.status(204).end();
+
     const { amount } = req.body;
 
     // Check if the amount is valid
