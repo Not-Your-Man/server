@@ -209,26 +209,17 @@ const Deposit = mongoose.model('Deposit', {
 // Middleware for parsing JSON bodies
 app.use(bodyParser.json());
 
-// Middleware for handling CORS preflight requests
-app.options('/api/deposit', (req, res) => {
+// Middleware for handling CORS preflight requests globally
+app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.status(204).end();
+  res.status(200).end();
 });
+
 // Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
   try {
-    // Handle preflight OPTIONS request
-    if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'POST');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-      res.status(200).end();
-      return;
-    }
-
-    // Handle actual POST request
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     const { amount } = req.body;
@@ -252,6 +243,7 @@ app.post('/api/deposit', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 //Start the server
 app.listen(PORT, () => {
