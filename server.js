@@ -31,19 +31,6 @@ const User = mongoose.model('User', userSchema);
 
 app.use(bodyParser.json());
 
-
-// Define endpoint to fetch all users
-app.get('/api/users', async (req, res) => {
-  try {
-    // Fetch all users from the database
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // Endpoint to handle user signup
 app.post('/api/signup', async (req, res) => {
   try {
@@ -66,6 +53,20 @@ app.post('/api/signup', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Define endpoint to fetch all users
+app.get('/api/users', async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
   
       // Configure NodeMailer
