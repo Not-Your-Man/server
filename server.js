@@ -31,28 +31,7 @@ const User = mongoose.model('User', userSchema);
 
 app.use(bodyParser.json());
 
-// Endpoint to handle user signup
-app.post('/api/signup', async (req, res) => {
-  try {
-    const { name, email, phone, password } = req.body;
-    // Check if the email already exists
-    const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email is already registered' });
-    }
-
-    // Create a new user
-    const newUser = new User({ name, email, phone, password });
-    await newUser.save();
-    
-    // Return success response
-    res.status(201).json({ message: 'User signed up successfully' });
-  } catch (error) {
-    console.error('Error signing up user:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
 // Define endpoint to fetch all users
 app.get('/api/users', async (req, res) => {
@@ -66,8 +45,16 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-
-
+app.post('/api/signup', async (req, res) => {
+    try {
+      const { name, email, phone, password } = req.body;
+      // Check if the email already exists
+      const existingUser = await User.findOne({ email });
+  
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email is already registered' });
+      }
+      
   
       // Configure NodeMailer
       const transporter = nodemailer.createTransport({
