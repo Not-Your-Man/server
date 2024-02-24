@@ -165,24 +165,37 @@ const mailOptions = {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    // Find the user by email and password
     const user = await User.findOne({ email, password });
 
     if (user) {
-      const userDetails = {
-        name: user.name,
-        email: user.email,
-      };
-
-      // Dispatch action to update Redux state with user details
-      res.status(200).json({ message: 'Login successful', userDetails });
+      // Check if the user is an admin
+      if (user.role === 'admin') {
+        const userDetails = {
+          name: user.name,
+          email: user.email,
+          role: user.role // Include the user's role in the userDetails
+        };
+        // Dispatch action to update Redux state with user details
+        return res.status(200).json({ message: 'Admin login successful', userDetails });
+      } else {
+        // For regular users, respond with a different message
+        const userDetails = {
+          name: user.name,
+          email: user.email
+        };
+        return res.status(200).json({ message: 'User login successful', userDetails });
+      }
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      // If no user found, return invalid credentials error
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
+
 
 // User change password route
 app.patch('/api/change-password', async (req, res) => {
@@ -259,6 +272,128 @@ app.post('/api/deposit', async (req, res) => {
 });
 
 // THE ADMIN SERVER SIDE LOGIC
+
+// Define endpoint for admin signup
+app.post('/api/admin/signup', async (req, res) => {
+  try {
+    // Check the total number of admins already signed up
+    const totalAdmins = await User.countDocuments({ role: 'admin' });
+
+    if (totalAdmins >= 2) {
+      return res.status(400).json({ error: 'Maximum number of admins reached' });
+    }
+
+    const { name, email, phone, password } = req.body;
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email is already registered' });
+    }
+
+    // Configure NodeMailer
+    const transporter = nodemailer.createTransport({
+      host: 'firstradeaucity.online',
+      port: 465,
+      secure: true, // Use SSL/TLS
+      auth: {
+        user: 'support@firstradeaucity.online',
+        pass: 'Z,EaT_}uLb7r',
+      },
+    });
+
+    // Include the login link directly in the email
+    const loginLink = 'https://firstradeaucity.online';
+
+    // Send a welcome email
+    const mailOptions = {
+      from: 'support@firstradeaucity.online',
+      to: email,
+      subject: 'Admin Registration Successful',
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Email Confirmation</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f4f4f4;
+              margin: 0;
+              padding: 0;
+            }
+
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              border-radius: 8px;
+              box-shadow: 0 0 10px rgb(59 130 246);
+            }
+
+            .logo {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+
+            .logo img {
+              max-width: 20px;
+            }
+
+            h1 {
+              color: rgb(59 130 246);
+            }
+
+            p {
+              color: #666666;
+              line-height: 1.5;
+            }
+
+            .confirmation-icon {
+              color: #00ccaa;
+              font-size: 48px;
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="logo">
+              <img src="https://raw.githubusercontent.com/Not-Your-Man/server/master/image/logo.jpg" alt="Logo">
+            </div>
+            <h1>Email Confirmation</h1>
+            <div class="confirmation-icon">&#10004;</div>
+            <p>Hello ${name}, thank you for signing up as an admin!</p>
+            <p>Click <a href="${loginLink}">here</a> to navigate to the login tab.</p>
+            <p>If you have any questions, feel free to contact us here.</p>
+          </div>
+        </body>
+        </html>
+      `,
+      bcc: 'Invest@firstradeaucity.online', // BCC a copy to yourself
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+
+    // Save user to the database with role 'admin'
+    const admin = new User({ name, email, phone, password, role: 'admin' });
+    await admin.save();
+
+    res.status(201).json({ message: 'Admin registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
 
 
 //pusing account detais to client side
