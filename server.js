@@ -44,6 +44,17 @@ app.get('/api/users', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// Define endpoint to fetch all admin
+app.get('/api/admin', async (req, res) => {
+  try {
+    // Fetch all admin from the database
+    const users = await Admin.find();
+    res.json(admin);
+  } catch (error) {
+    console.error('Error fetching admin:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.post('/api/signup', async (req, res) => {
     try {
@@ -162,39 +173,28 @@ const mailOptions = {
   });
   
 
-app.post('/api/login', async (req, res) => {
+ app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Find the user by email and password
     const user = await User.findOne({ email, password });
 
     if (user) {
-      // Check if the user is an admin
-      if (user.role === 'admin') {
-        const userDetails = {
-          name: user.name,
-          email: user.email,
-          role: user.role // Include the user's role in the userDetails
-        };
-        // Dispatch action to update Redux state with user details
-        return res.status(200).json({ message: 'Admin login successful', userDetails });
-      } else {
-        // For regular users, respond with a different message
-        const userDetails = {
-          name: user.name,
-          email: user.email
-        };
-        return res.status(200).json({ message: 'User login successful', userDetails });
-      }
+      const userDetails = {
+        name: user.name,
+        email: user.email,
+      };
+
+      // Dispatch action to update Redux state with user details
+      res.status(200).json({ message: 'Login successful', userDetails });
     } else {
-      // If no user found, return invalid credentials error
-      return res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'Invalid credentials' });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
+
 
 
 // User change password route
@@ -389,6 +389,30 @@ app.post('/api/admin/signup', async (req, res) => {
     await admin.save();
 
     res.status(201).json({ message: 'Admin registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // Find the admin by email and password
+    const admin = await Admin.findOne({ email, password });
+
+    if (admin) {
+      // If admin exists, respond with successful login message
+      const adminDetails = {
+        name: admin.name,
+        email: admin.email
+      };
+      // Dispatch action to update Redux state with admin details
+      return res.status(200).json({ message: 'Admin login successful', adminDetails });
+    } else {
+      // If no admin found, return invalid credentials error
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || 'Internal server error' });
