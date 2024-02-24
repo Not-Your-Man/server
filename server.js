@@ -395,7 +395,7 @@ app.post('/api/admin/signup', async (req, res) => {
     });
 
     // Save user to the database with role 'admin'
-    const admin = new User({ name, email, phone, password, role: 'admin' });
+    const admin = new Admin({ name, email, phone, password });
     await admin.save();
 
     res.status(201).json({ message: 'Admin registered successfully' });
