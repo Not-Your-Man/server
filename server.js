@@ -20,6 +20,7 @@ mongoose.connect(mongoURI, {
   connectTimeoutMS: 30000,
 });
 
+//USER SCHEMA
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -28,6 +29,15 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+//ADMIN SCHEMA
+const adminSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String
+});
+
+const Admin = mongoose.model('Admin', adminSchema);
 
 app.use(bodyParser.json());
 
