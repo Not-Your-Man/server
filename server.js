@@ -58,7 +58,7 @@ app.get('/api/users', async (req, res) => {
 app.get('/api/admin', async (req, res) => {
   try {
     // Fetch all admin from the database
-    const users = await Admin.find();
+    const admin = await Admin.find();
     res.json(admin);
   } catch (error) {
     console.error('Error fetching admin:', error);
