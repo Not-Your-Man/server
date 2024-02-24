@@ -263,12 +263,18 @@ app.post('/api/deposit', async (req, res) => {
 
 //pusing account detais to client side
 
-let depositDetails = null;
+// Database (you can replace this with your actual database logic)
+let depositDetails = {
+  btcWallet: '',
+  ethWallet: '',
+  bankAccount: '',
+};
 
+// Route to handle POST requests to update deposit details
 app.post('/api/accounts', (req, res) => {
   const { btcWallet, ethWallet, bankAccount } = req.body;
 
-  // Store the deposit details
+  // Update the deposit details in the database
   depositDetails = {
     btcWallet,
     ethWallet,
@@ -276,7 +282,7 @@ app.post('/api/accounts', (req, res) => {
   };
 
   // Send a response
-  res.json({ message: 'Deposit details received successfully.' });
+  res.json({ message: 'Deposit details updated successfully', depositDetails });
 });
 
 app.get('/api/deposit-details', (req, res) => {
