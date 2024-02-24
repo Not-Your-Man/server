@@ -268,17 +268,19 @@ let depositDetails = {
   btcWallet: '',
   ethWallet: '',
   bankAccount: '',
+  USDT: '',
 };
 
 // Route to handle POST requests to update deposit details
 app.post('/api/accounts', (req, res) => {
-  const { btcWallet, ethWallet, bankAccount } = req.body;
+  const { btcWallet, ethWallet, bankAccount, USDT } = req.body;
 
   // Update the deposit details in the database
   depositDetails = {
     btcWallet,
     ethWallet,
     bankAccount,
+    USDT,
   };
 
   // Send a response
