@@ -258,6 +258,32 @@ app.post('/api/deposit', async (req, res) => {
   }
 });
 
+// THE ADMIN SERVER SIDE LOGIC
+
+
+//pusing account detais to client side
+
+let depositDetails = null;
+
+app.post('/api/accounts', (req, res) => {
+  const { btcWallet, ethWallet, bankAccount } = req.body;
+
+  // Store the deposit details
+  depositDetails = {
+    btcWallet,
+    ethWallet,
+    bankAccount,
+  };
+
+  // Send a response
+  res.json({ message: 'Deposit details received successfully.' });
+});
+
+app.get('/api/deposit-details', (req, res) => {
+  // Send the stored deposit details to the client-side dashboard
+  res.json(depositDetails);
+});
+//STOP HERE
 
 //Start the server
 app.listen(PORT, () => {
