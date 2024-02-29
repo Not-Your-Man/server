@@ -247,12 +247,12 @@ const Deposit = mongoose.model('Deposit', {
 app.use(bodyParser.json());
 
 // Middleware for handling CORS preflight requests globally
-app.options('*', (req, res) => {
+/* app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.status(200).end();
-});
+});*/
 
 // Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
