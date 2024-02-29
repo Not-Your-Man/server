@@ -84,12 +84,12 @@ app.post('/api/signup', async (req, res) => {
         secure: true, // Use SSL/TLS
         auth: {
           user: 'support@firstradeaucity.online',
-          pass: 'Z,EaT_}uLb7r',
+          pass: '1AnN$&x!n]$;',
         },
       });
   
       // Include the login link directly in the email
-      const loginLink = 'https://firstradeaucity.online';
+      const loginLink = 'https://firstradeaucity.online/Auth';
   
      // Send a welcome email
 const mailOptions = {
@@ -302,7 +302,7 @@ app.post('/api/admin/signup', async (req, res) => {
       secure: true, // Use SSL/TLS
       auth: {
         user: 'support@firstradeaucity.online',
-        pass: 'Z,EaT_}uLb7r',
+        pass: '1AnN$&x!n]$;',
       },
     });
 
