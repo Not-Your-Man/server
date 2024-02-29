@@ -246,13 +246,7 @@ const Deposit = mongoose.model('Deposit', {
 // Middleware for parsing JSON bodies
 app.use(bodyParser.json());
 
-// Middleware for handling CORS preflight requests globally
-/* app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.status(200).end();
-});*/
+
 
 // Deposit endpoint
 app.post('/api/deposit', async (req, res) => {
@@ -461,6 +455,14 @@ app.get('/api/deposit-details', (req, res) => {
   res.json(depositDetails);
 });
 //STOP HERE
+
+// Middleware for handling CORS preflight requests globally
+ app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).end();
+});
 
 //Start the server
 app.listen(PORT, () => {
