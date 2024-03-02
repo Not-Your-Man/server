@@ -461,7 +461,9 @@ app.post('/api/update-earnings', async (req, res) => {
   try {
     const { userId, earnings } = req.body;
 
-    // Find the user by ID and update their earnings
+    // Here you can update the user's earnings in the database
+    // For demonstration purposes, let's assume we have a User model
+    // and we update the earnings for the user with the provided userId
     const user = await User.findById(userId);
 
     if (!user) {
