@@ -454,6 +454,34 @@ app.get('/api/deposit-details', (req, res) => {
   // Send the stored deposit details to the client-side dashboard
   res.json(depositDetails);
 });
+
+//USERS EARNINGS UPDATED
+// Define endpoint to update user earnings
+app.post('/api/update-earnings', async (req, res) => {
+  try {
+    const { userId, earnings } = req.body;
+
+    // Here you can update the user's earnings in the database
+    // For demonstration purposes, let's assume we have a User model
+    // and we update the earnings for the user with the provided userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update the user's earnings
+    user.earnings = earnings;
+    await user.save();
+
+    // Send a success response
+    res.status(200).json({ message: 'Earnings updated successfully' });
+  } catch (error) {
+    console.error('Error updating earnings:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 //STOP HERE
 
 // Middleware for handling CORS preflight requests globally
