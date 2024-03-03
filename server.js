@@ -471,22 +471,26 @@ app.post('/api/update-earnings', async (req, res) => {
     user.earnings = earnings;
 
     // Save user to the database
-   try {
-  // Save user to the database
-  await user.save();
+    try {
+      // Save user to the database
+      await user.save();
 
-  // Log success message
-  console.log('User earnings updated successfully');
+      // Log success message
+      console.log('User earnings updated successfully');
 
-  // Send success response
-  return res.status(200).json({ message: 'Earnings updated successfully' });
-} catch (error) {
-  // Log error message
-  console.error('Error saving user earnings:', error);
+      // Send success response
+      return res.status(200).json({ message: 'Earnings updated successfully' });
+    } catch (error) {
+      // Log error message
+      console.error('Error saving user earnings:', error);
 
-  // Send error response
-  return res.status(500).json({ error: 'Failed to update earnings' });
-}
+      // Send error response
+      return res.status(500).json({ error: 'Failed to update earnings' });
+    }
+  } catch (error) {
+    console.error('Error updating earnings:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 
