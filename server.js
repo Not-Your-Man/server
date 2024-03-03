@@ -468,31 +468,29 @@ const Earnings = mongoose.model('Earnings', new mongoose.Schema({
   }
 }));
 
-// Define endpoint to update user earnings
+// Route to handle POST requests to update user earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
     const { userId, earnings } = req.body;
 
-    // Create a new instance of Earnings model
-    const newEarnings = new Earnings({
-      userId: userId,
-      earnings: earnings
-    });
+    // Find the user by ID
+    const user = await User.findById(userId);
 
-    // Save the new earnings data to the database
-    await newEarnings.save();
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-    // Log success message
-    console.log('Earnings updated successfully');
+    // Update user's earnings
+    user.earnings = earnings;
+
+    // Save user to the database
+    await user.save();
 
     // Send success response
-    return res.status(200).json({ message: 'Earnings updated successfully' });
+    res.status(200).json({ message: 'Earnings updated successfully' });
   } catch (error) {
-    // Log error message
     console.error('Error updating earnings:', error);
-
-    // Send error response
-    return res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
