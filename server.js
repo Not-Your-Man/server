@@ -502,9 +502,14 @@ app.post('/api/update-earnings', async (req, res) => {
 // Define endpoint to fetch user earnings
 app.get('/api/earnings', async (req, res) => {
   try {
-    const userId = req.query.userId; // Assuming userId is passed as a query parameter
+    const userId = req.query.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'userId is required in the query parameters' });
+    }
+
     const user = await User.findById(userId);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -515,6 +520,7 @@ app.get('/api/earnings', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 //STOP HERE
 
