@@ -456,42 +456,46 @@ app.get('/api/deposit-details', (req, res) => {
 });
 
 //USERS EARNINGS UPDATED
+// Define the Earnings model
+const Earnings = mongoose.model('Earnings', new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true
+  },
+  earnings: {
+    type: Number,
+    required: true
+  }
+}));
+
+// Define endpoint to update user earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
     const { userId, earnings } = req.body;
 
-    // Find the user by ID
-    const user = await User.findById(userId);
+    // Create a new instance of Earnings model
+    const newEarnings = new Earnings({
+      userId: userId,
+      earnings: earnings
+    });
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    // Save the new earnings data to the database
+    await newEarnings.save();
 
-    // Update user's earnings
-    user.earnings = earnings;
+    // Log success message
+    console.log('Earnings updated successfully');
 
-    // Save user to the database
-    try {
-      // Save user to the database
-      await user.save();
-
-      // Log success message
-      console.log('User earnings updated successfully');
-
-      // Send success response
-      return res.status(200).json({ message: 'Earnings updated successfully' });
-    } catch (error) {
-      // Log error message
-      console.error('Error saving user earnings:', error);
-
-      // Send error response
-      return res.status(500).json({ error: 'Failed to update earnings' });
-    }
+    // Send success response
+    return res.status(200).json({ message: 'Earnings updated successfully' });
   } catch (error) {
+    // Log error message
     console.error('Error updating earnings:', error);
+
+    // Send error response
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 //FETCH EARNINGS
