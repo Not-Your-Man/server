@@ -468,7 +468,7 @@ const Earnings = mongoose.model('Earnings', new mongoose.Schema({
   }
 }));
 
-// Route to handle POST requests to update user earnings
+// Define endpoint to handle POST requests to update user earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
     const { userId, earnings } = req.body;
@@ -480,11 +480,19 @@ app.post('/api/update-earnings', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Update user's earnings
-    user.earnings = earnings;
+    // Create or update the earnings record associated with the user
+    let userEarnings = await Earnings.findOne({ user: userId });
 
-    // Save user to the database
-    await user.save();
+    if (!userEarnings) {
+      // If no earnings record exists, create a new one
+      userEarnings = new Earnings({ user: userId, earnings });
+    } else {
+      // If an earnings record exists, update the earnings
+      userEarnings.earnings = earnings;
+    }
+
+    // Save the earnings record to the database
+    await userEarnings.save();
 
     // Send success response
     res.status(200).json({ message: 'Earnings updated successfully' });
@@ -493,6 +501,7 @@ app.post('/api/update-earnings', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 
@@ -516,6 +525,7 @@ app.get('/api/earnings/:userId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 //STOP HERE
