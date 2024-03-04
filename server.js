@@ -471,21 +471,21 @@ const Earnings = mongoose.model('Earnings', new mongoose.Schema({
 // Define endpoint to handle POST requests to update user earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
-    const { userId, earnings } = req.body;
+    const { _id, earnings } = req.body;
 
     // Find the user by ID
-    const user = await User.findById(userId);
+    const user = await User.findById(_id);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     // Create or update the earnings record associated with the user
-    let userEarnings = await Earnings.findOne({ user: userId });
+    let userEarnings = await Earnings.findOne({ userId: _id });
 
     if (!userEarnings) {
       // If no earnings record exists, create a new one
-      userEarnings = new Earnings({ user: userId, earnings });
+      userEarnings = new Earnings({ userId: _id, earnings });
     } else {
       // If an earnings record exists, update the earnings
       userEarnings.earnings = earnings;
@@ -505,21 +505,22 @@ app.post('/api/update-earnings', async (req, res) => {
 
 
 
+
 //FETCH EARNINGS
 // Route to handle GET requests to fetch user earnings
 app.get('/api/earnings/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    // Find the user by ID
-    const user = await User.findById(userId);
+    // Find the earnings record by userId
+    const userEarnings = await Earnings.findOne({ userId });
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    if (!userEarnings) {
+      return res.status(404).json({ error: 'Earnings record not found for this user' });
     }
 
     // Send the user's earnings as a response
-    res.status(200).json({ earnings: user.earnings });
+    res.status(200).json({ earnings: userEarnings.earnings });
   } catch (error) {
     console.error('Error fetching earnings:', error);
     res.status(500).json({ error: 'Internal server error' });
