@@ -497,21 +497,19 @@ app.post('/api/update-earnings', async (req, res) => {
 
 
 //FETCH EARNINGS
-// Define endpoint to fetch user earnings
-app.get('/api/earnings', async (req, res) => {
+// Route to handle GET requests to fetch user earnings
+app.get('/api/earnings/:userId', async (req, res) => {
   try {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required in the query parameters' });
-    }
-
+    // Find the user by ID
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Send the user's earnings as a response
     res.status(200).json({ earnings: user.earnings });
   } catch (error) {
     console.error('Error fetching earnings:', error);
