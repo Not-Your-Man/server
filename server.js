@@ -455,44 +455,24 @@ app.get('/api/deposit-details', (req, res) => {
   res.json(depositDetails);
 });
 
-//USERS EARNINGS UPDATED
 // Define the Earnings model
 const Earnings = mongoose.model('Earnings', new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true
-  },
   earnings: {
     type: Number,
     required: true
   }
 }));
 
-// Define endpoint to handle POST requests to update user earnings
+// Define endpoint to handle POST requests to update earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
-    const { _id, earnings } = req.body;
+    const { earnings } = req.body;
 
-    // Find the user by ID
-    const user = await User.findById(_id);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Create or update the earnings record associated with the user
-    let userEarnings = await Earnings.findOne({ userId: _id });
-
-    if (!userEarnings) {
-      // If no earnings record exists, create a new one
-      userEarnings = new Earnings({ userId: _id, earnings });
-    } else {
-      // If an earnings record exists, update the earnings
-      userEarnings.earnings = earnings;
-    }
+    // Create a new earnings record
+    const newEarnings = new Earnings({ earnings });
 
     // Save the earnings record to the database
-    await userEarnings.save();
+    await newEarnings.save();
 
     // Send success response
     res.status(200).json({ message: 'Earnings updated successfully', earnings });
@@ -501,34 +481,20 @@ app.post('/api/update-earnings', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 //Fetch Earnings
-app.get('/api/earnings', (req, res) => {
-  // Send the stored earnings details to the client-side dashboard
-  res.json(earnings);
-});
-
-
-
-//FETCH EARNINGS
-// Route to handle GET requests to fetch user earnings
-/**app.get('/api/earnings/:userId', async (req, res) => {
+app.get('/api/earnings', async (req, res) => {
   try {
-    const userId = req.params.userId;
+    // Fetch all earnings records from the database
+    const allEarnings = await Earnings.find();
 
-    // Find the earnings record by userId
-    const userEarnings = await Earnings.findOne({ userId });
-
-    if (!userEarnings) {
-      return res.status(404).json({ error: 'Earnings record not found for this user' });
-    }
-
-    // Send the user's earnings as a response
-    res.status(200).json({ earnings: userEarnings.earnings });
+    // Send the earnings data to the client
+    res.json(allEarnings);
   } catch (error) {
     console.error('Error fetching earnings:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});*/
+});
 
 
 
