@@ -455,6 +455,16 @@ app.get('/api/deposit-details', (req, res) => {
   res.json(depositDetails);
 });
 
+// Define the Earnings schema and model
+const EarningsSchema = new mongoose.Schema({
+  earnings: {
+    type: Number,
+    required: true,
+  },
+});
+
+const Earnings = mongoose.model('Earnings', EarningsSchema);
+
 // Define endpoint to handle POST requests to update earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
@@ -482,8 +492,7 @@ app.post('/api/update-earnings', async (req, res) => {
   }
 });
 
-
-// Fetch Earnings
+// Define endpoint to handle GET requests to fetch earnings
 app.get('/api/earnings', async (req, res) => {
   try {
     // Find the first (and only) earnings record from the database
@@ -500,6 +509,7 @@ app.get('/api/earnings', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 
