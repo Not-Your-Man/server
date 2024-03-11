@@ -455,24 +455,24 @@ app.get('/api/deposit-details', (req, res) => {
   res.json(depositDetails);
 });
 
-// Define the Earnings model
-const Earnings = mongoose.model('Earnings', new mongoose.Schema({
-  earnings: {
-    type: Number,
-    required: true
-  }
-}));
-
 // Define endpoint to handle POST requests to update earnings
 app.post('/api/update-earnings', async (req, res) => {
   try {
     const { earnings } = req.body;
 
-    // Create a new earnings record
-    const newEarnings = new Earnings({ earnings });
+    // Check if an earnings record already exists
+    let existingEarnings = await Earnings.findOne();
+
+    if (!existingEarnings) {
+      // If no earnings record exists, create a new one
+      existingEarnings = new Earnings({ earnings });
+    } else {
+      // If an earnings record exists, update the earnings
+      existingEarnings.earnings = earnings;
+    }
 
     // Save the earnings record to the database
-    await newEarnings.save();
+    await existingEarnings.save();
 
     // Send success response
     res.status(200).json({ message: 'Earnings updated successfully', earnings });
@@ -482,19 +482,25 @@ app.post('/api/update-earnings', async (req, res) => {
   }
 });
 
-//Fetch Earnings
+
+// Fetch Earnings
 app.get('/api/earnings', async (req, res) => {
   try {
-    // Fetch all earnings records from the database
-    const allEarnings = await Earnings.find();
+    // Find the first (and only) earnings record from the database
+    const earnings = await Earnings.findOne();
+
+    if (!earnings) {
+      return res.status(404).json({ error: 'Earnings not found' });
+    }
 
     // Send the earnings data to the client
-    res.json(allEarnings);
+    res.json(earnings);
   } catch (error) {
     console.error('Error fetching earnings:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 
