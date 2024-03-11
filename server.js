@@ -495,20 +495,23 @@ app.post('/api/update-earnings', async (req, res) => {
     await userEarnings.save();
 
     // Send success response
-    res.status(200).json({ message: 'Earnings updated successfully' });
+    res.status(200).json({ message: 'Earnings updated successfully', earnings });
   } catch (error) {
     console.error('Error updating earnings:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
+//Fetch Earnings
+app.get('/api/earnings', (req, res) => {
+  // Send the stored earnings details to the client-side dashboard
+  res.json(earnings);
+});
 
 
 
 //FETCH EARNINGS
 // Route to handle GET requests to fetch user earnings
-app.get('/api/earnings/:userId', async (req, res) => {
+/**app.get('/api/earnings/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -525,7 +528,7 @@ app.get('/api/earnings/:userId', async (req, res) => {
     console.error('Error fetching earnings:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
+});*/
 
 
 
