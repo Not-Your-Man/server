@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -406,13 +407,17 @@ app.post('/api/admin/login', async (req, res) => {
     const admin = await Admin.findOne({ email, password });
 
     if (admin) {
-      // If admin exists, respond with successful login message
+      // If admin exists, generate a JWT token
       const adminDetails = {
         name: admin.name,
         email: admin.email
       };
-      // Dispatch action to update Redux state with admin details
-      return res.status(200).json({ message: 'Admin login successful', adminDetails });
+
+      // Create a JWT token with admin details as payload
+      const token = jwt.sign(adminDetails, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+      // Respond with successful login message and token
+      return res.status(200).json({ message: 'Admin login successful', token, adminDetails });
     } else {
       // If no admin found, return invalid credentials error
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -422,7 +427,6 @@ app.post('/api/admin/login', async (req, res) => {
     res.status(500).json({ error: error.message || 'Internal server error' });
   }
 });
-
 
 //pusing account detais to client side
 
